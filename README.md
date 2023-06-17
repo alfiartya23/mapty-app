@@ -1,2 +1,5 @@
 # mapty-app
-A lecture project in Jonas's JavasScript Course on Udemy. The main purpose of this project is to create a track history from the user running and cycling activity
+
+## Description
+
+A lecture project to track user running and cycling activity from Jonas's Javascript Course on Udemy. The main purpose of this project is to create a track history from the user running and cycling activity.
