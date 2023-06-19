@@ -19,18 +19,36 @@ if (navigator.geolocation) {
       // Getting the latitude and longitude
       const { latitude, longitude } = position.coords;
 
-      //   Initialize the map object from Leaflet and set its view to choosen geo coordinates
+      // Initialize the map object from Leaflet and set its view to choosen geo coordinates
       const currentCoords = [latitude, longitude];
-      const map = L.map("map").setView(currentCoords, 16);
-      console.log(map);
+      const map = L.map("map").setView(currentCoords, 17);
 
-      //   Adding tile layer (OpenStreetMap tile layer)
+      // Adding tile layer (OpenStreetMap tile layer)
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
 
-      L.marker(currentCoords).addTo(map).bindPopup("I'm here!").openPopup();
+      // Displaying a map marker when user click the map
+      // Using the map variable then attach the event listener from the leaflet library
+      map.on("click", function (mapEvent) {
+        const { lat, lng } = mapEvent.latlng;
+
+        // Use the clicked position to get the current latitude & longitude
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(
+            L.popup({
+              maxWidth: 250,
+              minWidth: 100,
+              autoClose: false,
+              closeOnClick: false,
+              className: "running-popup",
+            })
+          )
+          .setPopupContent("I'm here!")
+          .openPopup();
+      });
     },
     // if user block the location prompt
     function (error) {
