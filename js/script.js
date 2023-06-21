@@ -11,6 +11,56 @@ const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 
+// Define a Workout Class as a Parent
+class Workout {
+  date = new Date();
+  // Create ID for each instance object
+  id = (Date.now() + "").slice(-10);
+
+  constructor(coords, distance, duration) {
+    // [latitude, longitude]
+    this.coords = coords;
+    // In Kilometers
+    this.distance = distance;
+    // In Minutes
+    this.duration = duration;
+  }
+}
+
+// Define the Running Class
+class Running extends Workout {
+  constructor(coords, distance, duration, cadence) {
+    super(coords, distance, duration);
+    this.cadence = cadence;
+
+    // It's fine to call a method inside this constructor
+    this.calculatePace();
+  }
+
+  // Calculate Pace to define its Pace in hour/kilometer
+  calculatePace() {
+    this.pace = this.duration / this.distance;
+    return this.pace;
+  }
+}
+
+// Define the Cycling Class
+class Cycling extends Workout {
+  constructor(coords, distance, duration, elevationGain) {
+    super(coords, distance, duration);
+    this.elevationGain = elevationGain;
+
+    // Call calculate Speed
+    this.calculateSpeed();
+  }
+
+  // Calculate Speed to define its Speed in kilometer/hour
+  calculateSpeed() {
+    this.speed = this.distance / (this.duration / 60);
+    return this.speed;
+  }
+}
+
 // Refactoring the code with Class
 class App {
   // Private instance properties
