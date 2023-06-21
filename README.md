@@ -11,6 +11,6 @@ A lecture project to track user running and cycling activity from Jonas's Javasc
 
 ## Notes
 
-This Mapty App project code, ideas, and design credited to Jonas Schmedtmann in his Complete Javascript Course. I'm not claiming this project was made by me, this is only for learning purpose and my study portfolio.
+This Mapty App project code, ideas, and design credited to Jonas Schmedtmann in his Complete Javascript Course. I'm not claiming this project was my idea, this is only for learning purpose and my study portfolio.
 
 Thank you 👋
