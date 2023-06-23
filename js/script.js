@@ -5,7 +5,6 @@ class Workout {
   date = new Date();
   // Create ID for each instance object
   id = (Date.now() + "").slice(-10);
-  clicks = 0;
 
   constructor(coords, distance, duration) {
     // [latitude, longitude]
@@ -24,8 +23,9 @@ class Workout {
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]} ${this.date.getDate()}, ${this.date.getFullYear()}`;
   }
 
-  click() {
-    this.clicks++;
+  // Set the public API
+  clicks() {
+    this.click++;
   }
 }
 
@@ -96,6 +96,9 @@ class App {
     // Remember to call this to reset the Form!
     this._resetFrom();
 
+    // Getting data from localStorage
+    this._getLocalStorageData();
+
     // Attach the form submit so it will immediately run as the page loads
     // When user press enter to submit data to the form
     form.addEventListener("submit", this._newWorkout.bind(this));
@@ -143,6 +146,11 @@ class App {
     // Displaying a map marker when user click the map
     // Using the map variable then attach the event listener from the leaflet library
     this.#map.on("click", this._showForm.bind(this));
+
+    // Displaying the marker pin after the map loaded
+    this.#workouts.forEach((work) => {
+      this._renderWorkoutMarker(work);
+    });
   }
 
   // Display the workout form
@@ -221,7 +229,6 @@ class App {
 
     // Add new object to workout array
     this.#workouts.push(workout);
-    console.log(workout);
 
     // Render workout as a marker
     this._renderWorkoutMarker(workout);
@@ -231,6 +238,9 @@ class App {
 
     // Hide the form
     this._hideForm();
+
+    // Set data to the localStorage
+    this._setLocalStorage();
   }
 
   // Render workout as a marker
@@ -268,7 +278,7 @@ class App {
         </div>
     `;
 
-    if (workout.type === "running")
+    if (workout.type === "running") {
       htmlTag += `
         <div class="workout__details">
           <span class="workout__icon">⚡️</span>
@@ -282,8 +292,9 @@ class App {
         </div>
       </li>
       `;
+    }
 
-    if (workout.type === "cycling")
+    if (workout.type === "cycling") {
       htmlTag += `
           <div class="workout__details">
             <span class="workout__icon">⚡️</span>
@@ -297,6 +308,7 @@ class App {
           </div>
       </li>
       `;
+    }
 
     form.insertAdjacentHTML("afterend", htmlTag);
   }
@@ -304,7 +316,6 @@ class App {
   // Move to marker popup
   _moveToPopup(e) {
     const workoutElement = e.target.closest(".workout");
-    console.log(workoutElement);
 
     if (!workoutElement) {
       return;
@@ -315,7 +326,6 @@ class App {
       const element = work.id === workoutElement.dataset.id;
       return element;
     });
-    console.log(workout);
 
     // Move to the pin
     this.#map.setView(workout.coords, this.#selectedZoomLevel, {
@@ -324,9 +334,33 @@ class App {
         duration: 1,
       },
     });
+  }
 
-    // Using the public interface
-    workout.click();
+  // Set the localStorage to store user data
+  _setLocalStorage() {
+    localStorage.setItem("activity", JSON.stringify(this.#workouts));
+  }
+
+  // Getting the data from localStorage
+  // Keep in mind that this method will be executed right at the begining
+  _getLocalStorageData() {
+    const data = JSON.parse(localStorage.getItem("activity"));
+
+    if (!data) {
+      return;
+    }
+    // Assign workout that we have to the data inside localStoge
+    this.#workouts = data;
+    this.#workouts.forEach((work) => {
+      // Run the render workoutlist
+      this._renderWorkoutList(work);
+    });
+  }
+
+  // Public method Reset
+  reset() {
+    localStorage.removeItem("activity");
+    location.reload();
   }
 }
 
